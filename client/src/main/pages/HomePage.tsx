@@ -25,27 +25,25 @@ const Home = ({ statisticsList, loading }: HomePageProps) => {
 
   return (
     <div>
-      <h1 className="page-title">WCA Statistics</h1>
+      <h1 className="page-title">WCA STATISTICS</h1>
 
       <Divider />
 
       <Row gutter={[8, 8]}>
         <Col xs={24} md={8}>
-          <Card title="Statistics List" className="stat-card">
+          <Card
+            title={<h3 className="stat-card-title">Statistics List</h3>}
+            className="stat-card"
+          >
             <p>
               Check our <Link to="statistics-list">list with interesting</Link>{" "}
-              statistics.
-            </p>
-
-            <p>
-              We try always to add new statistics. You can suggest one by
-              reaching the WCA Software Team. If that's widely interesting and
-              feasible to implement, we might add it!
+              statistics. We try always to add new statistics. You can suggest
+              one by reaching the WCA Software Team. If that's widely
+              interesting and feasible to implement, we might add it!
             </p>
 
             {statisticsList && (
               <Statistic
-                className="stat-stat"
                 title="Current Statistics"
                 value={statisticsList.totalSize}
               />
@@ -59,7 +57,14 @@ const Home = ({ statisticsList, loading }: HomePageProps) => {
           </Card>
         </Col>
         <Col xs={24} md={8}>
-          <Card title="Take me to a random statistics" className="stat-card">
+          <Card
+            title={
+              <h3 className="stat-card-title">
+                Take me to a random statistics
+              </h3>
+            }
+            className="stat-card"
+          >
             <p>
               Click <Link to={randomLink}>here</Link> to be redirected to a
               random page.
@@ -67,7 +72,10 @@ const Home = ({ statisticsList, loading }: HomePageProps) => {
           </Card>
         </Col>
         <Col xs={24} md={8}>
-          <Card title="Logged Feature" className="stat-card">
+          <Card
+            title={<h3 className="stat-card-title">Logged Feature</h3>}
+            className="stat-card"
+          >
             {authCtx.isLogged && (
               <>
                 <p>

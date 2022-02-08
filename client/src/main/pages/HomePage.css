@@ -14,11 +14,13 @@
   margin-left: 5px;
 }
 
-.stat-stat {
-  text-align: center;
-}
-
 .stat-card {
   height: 100%;
   box-shadow: 3px 3px 6px #ccc;
+  text-align: center;
+}
+
+.stat-card-title {
+  text-align: center;
+  font-weight: bold;
 }

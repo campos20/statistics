@@ -13,6 +13,7 @@ import org.worldcubeassociation.statistics.request.BestEverRanksRequest;
 import org.worldcubeassociation.statistics.response.BestEverRanksEventResponse;
 import org.worldcubeassociation.statistics.response.BestEverRanksResponse;
 import org.worldcubeassociation.statistics.service.BestEverRanksService;
+import org.worldcubeassociation.statistics.service.ChartRaceService;
 import org.worldcubeassociation.statistics.service.EventService;
 import org.worldcubeassociation.statistics.service.RecordEvolutionService;
 
@@ -38,10 +39,12 @@ public class BestEverRanksServiceImpl implements BestEverRanksService {
     @Autowired
     private RecordEvolutionService recordEvolutionService;
 
+    @Autowired
+    private ChartRaceService chartRaceService;
+
     @Override
     public BestEverRankDTO get(String personId) {
-        BestEverRank bestEverRank = bestEverRanksRepository.findById(personId)
-                .orElseThrow(() -> new NotFoundException("Rank not found for " + personId));
+        BestEverRank bestEverRank = bestEverRanksRepository.findById(personId).orElseThrow(() -> new NotFoundException("Rank not found for " + personId));
         return objectMapper.convertValue(bestEverRank, BestEverRankDTO.class);
     }
 
@@ -59,6 +62,7 @@ public class BestEverRanksServiceImpl implements BestEverRanksService {
         log.info("{} results deleted", deleted);
 
         recordEvolutionService.removeAll();
+        chartRaceService.removeAll();
 
         BestEverRanksResponse bestEverRanksResponse = new BestEverRanksResponse();
         bestEverRanksResponse.setEvents(new ArrayList<>());
@@ -105,6 +109,7 @@ public class BestEverRanksServiceImpl implements BestEverRanksService {
 
             summarizeResults(todayCompetitors, worlds, continents, countries, date);
             recordEvolutionService.registerEvolution(worlds.get(0), eventId, date);
+            chartRaceService.registerStep(worlds.get(0), eventId, date);
         }
 
         saveResults(event, worlds, continents, countries);

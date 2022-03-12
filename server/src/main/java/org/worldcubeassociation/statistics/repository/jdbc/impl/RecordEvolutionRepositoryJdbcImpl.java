@@ -40,7 +40,6 @@ public class RecordEvolutionRepositoryJdbcImpl implements RecordEvolutionReposit
     @Override
     public int removeAll() {
         return namedJdbcTemplate.update(StatisticsUtil.getQuery("recordevolution/removeAll"), new HashMap<>());
-
     }
 
     @Override

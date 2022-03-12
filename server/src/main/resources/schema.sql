@@ -23,6 +23,11 @@ create table if not exists record_evolution (
     evolution json not null
 );
 
+create table if not exists chart_race (
+    event_id varchar(6) primary key,
+    data json not null
+);
+
 ----------------------------------------------------------------------------------------------------
 -- Person link
 

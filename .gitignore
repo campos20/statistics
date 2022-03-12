@@ -17,6 +17,7 @@ WCA_export*
 nohup.out
 
 venv/
+*.mp4
 
 *node_modules*
 

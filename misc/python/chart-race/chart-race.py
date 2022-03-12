@@ -1,8 +1,13 @@
 import bar_chart_race as bcr
-df = bcr.load_dataset('covid19_tutorial')
+import pandas as pd
+
+d = {'col1': [1, 2, 5], 'col2': [3, 4, 3]}
+df = pd.DataFrame(data=d)
+
+
 bcr.bar_chart_race(
     df=df,
-    filename='covid19_horiz.mp4',
+    filename='record_race.mp4',
     orientation='h',
     sort='desc',
     n_bars=6,
@@ -17,7 +22,6 @@ bcr.bar_chart_race(
     period_summary_func=lambda v, r: {'x': .99, 'y': .18,
                                       's': f'Total deaths: {v.nlargest(6).sum():,.0f}',
                                       'ha': 'right', 'size': 8, 'family': 'Courier New'},
-    perpendicular_bar_func='median',
     period_length=500,
     figsize=(5, 3),
     dpi=144,

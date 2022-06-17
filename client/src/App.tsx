@@ -16,6 +16,7 @@ import "./App.css";
 import statisticsApi from "./main/api/statistics.api";
 import Footer from "./main/components/Footer";
 import { LoginRequired } from "./main/components/LoginRequired";
+import { MaintenanceInProgress } from "./main/components/MaintenanceInProgress";
 import StatisticsDisplay from "./main/components/StatisticsDisplay";
 import Topbar from "./main/components/Topbar";
 import { errorInterceptor, requestIntercetor } from "./main/config/interceptor";
@@ -35,115 +36,121 @@ axios.interceptors.response.use(undefined, errorInterceptor);
 axios.interceptors.request.use(requestIntercetor);
 
 function App() {
-  const [statisticsList, setStatisticsList] = useState<StatisticsList>();
-  const [loading, setLoading] = useState(false);
-
-  const authCtx = useContext(AuthContext);
-
-  const getStatisticsList = () => {
-    setLoading(true);
-    statisticsApi
-      .getStatisticsGroups()
-      .then((response) => setStatisticsList(response.data))
-      .catch(() => message.error("Error fetching statistics list"))
-      .finally(() => setLoading(false));
-  };
-
-  const links: LinkItem[] = [
-    {
-      name: "Home",
-      href: "/",
-      exact: true,
-      icon: <HomeOutlined />,
-      component: <HomePage statisticsList={statisticsList} loading={loading} />,
-    },
-    {
-      name: "Database Query",
-      href: "/database-query",
-      exact: false,
-      icon: <DatabaseOutlined />,
-      component: <DatabaseQueryPage />,
-      requiresLogin: true,
-    },
-    {
-      name: "About",
-      href: "/about",
-      exact: false,
-      icon: <SolutionOutlined />,
-      component: <AboutPage />,
-    },
-    {
-      name: "Record Evolution",
-      href: "/record-evolution",
-      exact: true,
-      icon: <LineChartOutlined />,
-      component: <RecordEvolutionPage />,
-    },
-    {
-      name: "Ranks",
-      href: "#", // Non used anyways
-      exact: false,
-      icon: <BarChartOutlined />,
-      subItems: [
-        {
-          name: "Best Ever Ranks",
-          href: "/best-ever-ranks",
-          exact: true,
-          icon: <RiseOutlined />,
-          component: <BestEverRanksPage />,
-        },
-        {
-          name: "Sum of Ranks",
-          href: "/sum-of-ranks",
-          exact: true,
-          icon: <PlusCircleOutlined />,
-          component: <SumOfRanksPage />,
-        },
-      ],
-    },
-    {
-      name: "Statistics List",
-      href: "/statistics-list",
-      exact: true,
-      icon: <OrderedListOutlined />,
-      component: <StatisticsListPage statisticsList={statisticsList} />,
-    },
-  ];
-
-  useEffect(getStatisticsList, []);
-
-  const flatLinks = [...links.flatMap((x) => (x.subItems ? x.subItems : [x]))];
-
   return (
-    <BrowserRouter>
-      <div id="page-container">
-        <Topbar links={links} statisticsGroups={statisticsList?.list} />
-        <div id="content-wrapper">
-          <Routes>
-            {flatLinks.map((link) => (
-              <Route
-                key={link.href}
-                path={link.href}
-                element={
-                  !link.requiresLogin || authCtx.isLogged ? (
-                    link.component
-                  ) : (
-                    <LoginRequired />
-                  )
-                }
-              />
-            ))}
-            <Route
-              path="/statistics-list/:pathId"
-              element={<StatisticsDisplay />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <div id="page-container">
+      <MaintenanceInProgress />
+    </div>
   );
+
+  // const [statisticsList, setStatisticsList] = useState<StatisticsList>();
+  // const [loading, setLoading] = useState(false);
+
+  // const authCtx = useContext(AuthContext);
+
+  // const getStatisticsList = () => {
+  //   setLoading(true);
+  //   statisticsApi
+  //     .getStatisticsGroups()
+  //     .then((response) => setStatisticsList(response.data))
+  //     .catch(() => message.error("Error fetching statistics list"))
+  //     .finally(() => setLoading(false));
+  // };
+
+  // const links: LinkItem[] = [
+  //   {
+  //     name: "Home",
+  //     href: "/",
+  //     exact: true,
+  //     icon: <HomeOutlined />,
+  //     component: <HomePage statisticsList={statisticsList} loading={loading} />,
+  //   },
+  //   {
+  //     name: "Database Query",
+  //     href: "/database-query",
+  //     exact: false,
+  //     icon: <DatabaseOutlined />,
+  //     component: <DatabaseQueryPage />,
+  //     requiresLogin: true,
+  //   },
+  //   {
+  //     name: "About",
+  //     href: "/about",
+  //     exact: false,
+  //     icon: <SolutionOutlined />,
+  //     component: <AboutPage />,
+  //   },
+  //   {
+  //     name: "Record Evolution",
+  //     href: "/record-evolution",
+  //     exact: true,
+  //     icon: <LineChartOutlined />,
+  //     component: <RecordEvolutionPage />,
+  //   },
+  //   {
+  //     name: "Ranks",
+  //     href: "#", // Non used anyways
+  //     exact: false,
+  //     icon: <BarChartOutlined />,
+  //     subItems: [
+  //       {
+  //         name: "Best Ever Ranks",
+  //         href: "/best-ever-ranks",
+  //         exact: true,
+  //         icon: <RiseOutlined />,
+  //         component: <BestEverRanksPage />,
+  //       },
+  //       {
+  //         name: "Sum of Ranks",
+  //         href: "/sum-of-ranks",
+  //         exact: true,
+  //         icon: <PlusCircleOutlined />,
+  //         component: <SumOfRanksPage />,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     name: "Statistics List",
+  //     href: "/statistics-list",
+  //     exact: true,
+  //     icon: <OrderedListOutlined />,
+  //     component: <StatisticsListPage statisticsList={statisticsList} />,
+  //   },
+  // ];
+
+  // useEffect(getStatisticsList, []);
+
+  // const flatLinks = [...links.flatMap((x) => (x.subItems ? x.subItems : [x]))];
+
+  // return (
+  //   <BrowserRouter>
+  //     <div id="page-container">
+  //       <Topbar links={links} statisticsGroups={statisticsList?.list} />
+  //       <div id="content-wrapper">
+  //         <Routes>
+  //           {flatLinks.map((link) => (
+  //             <Route
+  //               key={link.href}
+  //               path={link.href}
+  //               element={
+  //                 !link.requiresLogin || authCtx.isLogged ? (
+  //                   link.component
+  //                 ) : (
+  //                   <LoginRequired />
+  //                 )
+  //               }
+  //             />
+  //           ))}
+  //           <Route
+  //             path="/statistics-list/:pathId"
+  //             element={<StatisticsDisplay />}
+  //           />
+  //           <Route path="*" element={<NotFoundPage />} />
+  //         </Routes>
+  //       </div>
+  //       <Footer />
+  //     </div>
+  //   </BrowserRouter>
+  // );
 }
 
 export default App;

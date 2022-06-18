@@ -67,7 +67,6 @@ from
     left join Continents c2 on c.continentId = c2.id
     left join region_bests rb on rb.event_id = e.id
     and rb.region = c2.id
-    and c2.id = rb.region
 where
     e.`rank` < 900 -- Filter by active ranks
     and wca_id is not null

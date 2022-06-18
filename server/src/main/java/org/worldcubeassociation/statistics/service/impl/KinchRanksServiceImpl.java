@@ -39,7 +39,7 @@ public class KinchRanksServiceImpl implements KinchRanksService {
 
         response.setWorldRank(kinchRanksRepository.generateWorldRank());
         response.setContinentRank(kinchRanksRepository.generateContinentRank());
-//        response.setCountryRank(kinchRanksRepository.generateCountryRank());
+        response.setCountryRank(kinchRanksRepository.generateCountryRank());
 
         log.info("Update regional ranks");
         kinchRanksRepository.updateRanks();

@@ -10,6 +10,6 @@ public class SumOfRanksDto {
     private String wcaId;
     private String name;
     private String countryIso2;
-    private Integer overall;
+    private Float overall;
     private List<SumOfRankEventDto> events;
 }

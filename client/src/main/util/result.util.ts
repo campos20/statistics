@@ -95,3 +95,5 @@ const padLeft = (result: number, totalSize: number) => {
 };
 
 export default formatResult;
+
+export const getPercentResult = (result: number) => `${result.toFixed(2)}%`;

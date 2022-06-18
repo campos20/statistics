@@ -8,17 +8,17 @@ insert into
         result_type,
         overall,
         events
-    ) with default_ranks as (
+    ) with region_bests as (
         select
             e.id event_id,
             (
                 select
-                    coalesce(max(worldRank), 0)
+                    min(best)
                 from
                     RanksSingle r
                 where
                     r.eventId = e.id
-            ) + 1 default_rank
+            ) region_best
         from
             Events e
         where
@@ -40,24 +40,34 @@ select
         select
             'Single'
     ) result_type,
-    sum(coalesce(r.worldRank, default_rank)) overall,
+    round(
+        avg(
+            case
+                when coalesce(best, 0) = 0 then 0
+                else region_best / best
+            end * 100
+        ),
+        2
+    ) overall,
     json_arrayagg(
         json_object(
             'event',
             json_object('id', e.id, 'name', e.name, 'rank', e.rank),
             'regionalRank',
-            coalesce(r.worldRank, default_rank),
-            'completed',
-            r.worldRank is not null
+            case
+                when coalesce(best, 0) = 0 then 0
+                else region_best / best
+            end * 100
         )
     ) events
 from
     Events e
-    left join users u on e.`rank` < 900 -- Filter by active ranks
+    left join users u on true
     left join RanksSingle r on r.eventId = e.id
     and r.personId = u.wca_id
-    left join default_ranks dr on dr.event_id = e.id
+    left join region_bests rb on rb.event_id = e.id
 where
-    wca_id is not null
+    e.`rank` < 900 -- Filter by active ranks
+    and wca_id is not null
 group by
     wca_id

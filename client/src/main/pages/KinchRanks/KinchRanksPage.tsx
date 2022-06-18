@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import { kinchRanksApi } from "../../api/KinchRanksApi";
 import { MetaSorInfo } from "../../model/rank/MetaSorInfo";
 import { SumOfRanks } from "../../model/rank/SumOfRanks";
+import { getPercentResult } from "../../util/result.util";
 import { getPersonLink, WCA_ID_MAX_LENGTH } from "../../util/WcaUtil";
 import styles from "./KinchRanksPage.module.css";
 
@@ -212,14 +213,14 @@ export const KinchRanksPage = () => {
                         <td
                           key={i}
                           className={
-                            !e.completed
-                              ? styles.notCompleted
-                              : e.regionalRank <= 10
+                            e.regionalRank >= 90
                               ? styles.top10
+                              : e.regionalRank === 0
+                              ? styles.notCompleted
                               : ""
                           }
                         >
-                          {e.regionalRank}
+                          {getPercentResult(e.regionalRank)}
                         </td>
                       ))}
                     </tr>

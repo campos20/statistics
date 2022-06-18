@@ -40,16 +40,14 @@ select
         select
             'Average'
     ) result_type,
-    cast(
-        round(
-            avg(
-                case
-                    when coalesce(best, 0) = 0 then 0
-                    else region_best / best
-                end * 100
-            ),
-            2
-        ) as char(10)
+    round(
+        avg(
+            case
+                when coalesce(best, 0) = 0 then 0
+                else region_best / best
+            end * 100
+        ),
+        2
     ) overall,
     json_arrayagg(
         json_object(

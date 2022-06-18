@@ -54,7 +54,7 @@ create table if not exists kinch_ranks (
     name varchar(255),
     country_iso2 varchar(2),
     result_type varchar(7) not null,
-    overall int default null,
+    overall decimal(6, 3) default null,
     events json not null,
     primary key (region, region_type, wca_id, result_type),
     key `kinch_where_clause_idx` (`region`, `region_type`, `result_type`)

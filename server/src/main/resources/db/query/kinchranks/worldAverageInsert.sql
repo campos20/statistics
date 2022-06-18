@@ -40,15 +40,21 @@ select
         select
             'Average'
     ) result_type,
-    avg(coalesce(best, 0) / region_best) overall,
+    avg(
+        case
+            when coalesce(best, 0) = 0 then 0
+            else region_best / best
+        end * 100
+    ) overall,
     json_arrayagg(
         json_object(
             'event',
             json_object('id', e.id, 'name', e.name, 'rank', e.rank),
             'regionalRank',
-            coalesce(best, 0) / region_best,
-            'completed',
-            r.worldRank is not null
+            case
+                when coalesce(best, 0) = 0 then 0
+                else region_best / best
+            end * 100
         )
     ) events
 from

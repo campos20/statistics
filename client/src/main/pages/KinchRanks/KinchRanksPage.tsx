@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { sumOfRanksApi } from "../../api/SumOfRanksApi";
+import { kinchRanksApi } from "../../api/KinchRanksApi";
 import { MetaSorInfo } from "../../model/rank/MetaSorInfo";
 import { SumOfRanks } from "../../model/rank/SumOfRanks";
 import { getPersonLink, WCA_ID_MAX_LENGTH } from "../../util/WcaUtil";
@@ -34,7 +34,7 @@ export const KinchRanksPage = () => {
   const [wcaId, setWcaId] = useState("");
 
   const fetchMetaInfor = useCallback(() => {
-    sumOfRanksApi
+    kinchRanksApi
       .meta()
       .then((response) => {
         setMetaSor(response.data);
@@ -58,7 +58,7 @@ export const KinchRanksPage = () => {
       wcaId?: string
     ) => {
       setLoading(true);
-      sumOfRanksApi
+      kinchRanksApi
         .listSumOfRanks(resultType, regionType, region, page, pageSize, wcaId)
         .then((response) => {
           setRanks(response.data.content);

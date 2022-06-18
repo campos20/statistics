@@ -44,7 +44,7 @@ public class KinchRanksRepositoryJdbcImpl implements KinchRanksRepositoryJdbc {
 
     @Override
     public int deleteAll() {
-        return jdbcTemplate.update("delete from sum_of_ranks where 1=1");
+        return jdbcTemplate.update("delete from kinch_ranks where 1=1");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class KinchRanksRepositoryJdbcImpl implements KinchRanksRepositoryJdbc {
     @Override
     public List<SumOfRanksDto> list(String resultType, String regionType, String region, int page,
                                     int pageSize) {
-        return namedJdbcTemplate.query(StatisticsUtil.getQuery("kinchranks/getkinchranks"),
+        return namedJdbcTemplate.query(StatisticsUtil.getQuery("kinchranks/getRanks"),
                 new MapSqlParameterSource().addValue("REGION_TYPE", regionType).addValue("REGION", region)
                         .addValue("RESULT_TYPE", resultType).addValue("PAGE_SIZE", pageSize)
                         .addValue("OFFSET", page * pageSize), JdbcTemplateMapperFactory.newInstance()
@@ -88,7 +88,7 @@ public class KinchRanksRepositoryJdbcImpl implements KinchRanksRepositoryJdbc {
 
     @Override
     public int deleteAllMeta() {
-        return jdbcTemplate.update("delete from sum_of_ranks_meta where 1=1");
+        return jdbcTemplate.update("delete from kinch_ranks_meta where 1=1");
     }
 
     @Override

@@ -8,7 +8,7 @@ update
                 s2.region_type,
                 s2.region
                 order by
-                    overall
+                    overall desc
             ) r
         from
             kinch_ranks s2

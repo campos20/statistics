@@ -208,7 +208,7 @@ export const KinchRanksPage = () => {
                           {r.name}
                         </a>
                       </td>
-                      <td>{r.overall}</td>
+                      <td>{getPercentResult(r.overall)}</td>
                       {r.events.map((e, i) => (
                         <td
                           key={i}

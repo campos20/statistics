@@ -31,7 +31,7 @@ const Home = ({ statisticsList, loading }: HomePageProps) => {
     >
       <h1 className="page-title main-title">WCA Statistics</h1>
 
-      <Row gutter={16} justify="center">
+      <Row gutter={[16, 8]} justify="center">
         <Col xs={20} md={6}>
           <div className="stat-card">
             <h3>Statistics List</h3>

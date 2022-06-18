@@ -1,3 +1,4 @@
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Col,
   Input,
@@ -94,8 +95,8 @@ export const KinchRanksPage = () => {
     <>
       <h1 className="page-title">Kinch Ranks</h1>
       <Space direction="vertical" className={styles.contentContainer}>
-        <Row gutter={16} justify="center">
-          <Col span={6} className={styles.contentContainer}>
+        <Row gutter={[16, 8]} justify="center">
+          <Col xs={20} md={6} className={styles.contentContainer}>
             <Select
               className={styles.contentContainer}
               value={resultType}
@@ -106,7 +107,7 @@ export const KinchRanksPage = () => {
               }))}
             />
           </Col>
-          <Col span={6} className={styles.contentContainer}>
+          <Col xs={20} md={6} className={styles.contentContainer}>
             <Select
               className={styles.contentContainer}
               value={selectedRegionGroup}
@@ -130,8 +131,9 @@ export const KinchRanksPage = () => {
                 ))}
             </Select>
           </Col>
-          <Col span={6} className={styles.contentContainer}>
+          <Col xs={20} md={6} className={styles.contentContainer}>
             <Input
+              prefix={<SearchOutlined />}
               placeholder="Find by WCA ID"
               className={styles.contentContainer}
               disabled={!resultType || !region}

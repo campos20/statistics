@@ -8,7 +8,7 @@ insert into
         result_type,
         overall,
         events
-    ) with default_results as (
+    ) with region_bests as (
         select
             e.id event_id,
             (
@@ -18,7 +18,7 @@ insert into
                     RanksAverage r
                 where
                     r.eventId = e.id
-            ) default_result
+            ) region_best
         from
             Events e
         where
@@ -40,25 +40,26 @@ select
         select
             'Average'
     ) result_type,
-    sum(coalesce(r.worldRank, default_rank)) overall,
+    avg(coalesce(best, 0) / region_best) overall,
     json_arrayagg(
         json_object(
             'event',
             json_object('id', e.id, 'name', e.name, 'rank', e.rank),
             'regionalRank',
-            r.best,
+            coalesce(best, 0) / region_best,
             'completed',
             r.worldRank is not null
         )
     ) events
 from
     Events e
-    left join users u on e.`rank` < 900 -- Filter by active ranks
+    left join users u on true
     left join RanksAverage r on r.eventId = e.id
     and r.personId = u.wca_id
-    left join default_ranks dr on dr.event_id = e.id
+    left join region_bests rb on rb.event_id = e.id
 where
-    wca_id is not null
+    e.`rank` < 900 -- Filter by active ranks
+    and wca_id is not null
     and exists (
         -- Some events has no averages and this excludes them to avoid adding 1 into the sum
         select

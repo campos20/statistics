@@ -46,6 +46,28 @@ create table if not exists sum_of_ranks_meta (
     primary key (result_type, region, region_type)
 );
 
+create table if not exists kinch_ranks (
+    region_rank int default null,
+    region varchar(100) not null,
+    region_type varchar(20) not null,
+    wca_id varchar(10) not null,
+    name varchar(255),
+    country_iso2 varchar(2),
+    result_type varchar(7) not null,
+    overall int default null,
+    events json not null,
+    primary key (region, region_type, wca_id, result_type),
+    key `kinch_where_clause_idx` (`region`, `region_type`, `result_type`)
+);
+
+create table if not exists kinch_ranks_meta (
+    result_type varchar(7) not null,
+    region_type varchar(20) not null,
+    region varchar(100) not null,
+    total_size int not null,
+    primary key (result_type, region, region_type)
+);
+
 ----------------------------------------------------------------------------------------------------
 -- Person link
 drop function if exists wca_statistics_person_link_format;

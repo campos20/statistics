@@ -25,6 +25,7 @@ import AboutPage from "./main/pages/AboutPage";
 import BestEverRanksPage from "./main/pages/BestEverRanksPage";
 import { DatabaseQueryPage } from "./main/pages/DatabaseQueryPage";
 import HomePage from "./main/pages/HomePage";
+import { KinchRanksPage } from "./main/pages/KinchRanks/KinchRanksPage";
 import NotFoundPage from "./main/pages/NotFoundPage";
 import { RecordEvolutionPage } from "./main/pages/RecordEvolutionPage";
 import StatisticsListPage from "./main/pages/StatisticsListPage";
@@ -98,6 +99,13 @@ function App() {
           exact: true,
           icon: <PlusCircleOutlined />,
           component: <SumOfRanksPage />,
+        },
+        {
+          name: "Kinch Ranks",
+          href: "/kinch-ranks",
+          exact: true,
+          icon: <PlusCircleOutlined />,
+          component: <KinchRanksPage />,
         },
       ],
     },

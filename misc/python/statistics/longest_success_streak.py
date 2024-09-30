@@ -3,7 +3,12 @@
 import bisect
 
 from misc.python.model.competitor import Competitor as Comp
-from misc.python.util.database_util import get_database_connection
+from misc.python.util.database_util import (
+    get_database_connection,
+    start_process,
+    complete_process,
+    error_process,
+)
 from misc.python.util.event_util import get_current_events
 from misc.python.util.html_util import (
     get_competition_html_link,
@@ -32,7 +37,7 @@ query = """select
     personName,
     r.countryId,
     competitionId,
-    value1,
+    valuasdfe1,
     value2,
     value3,
     value4,
@@ -45,6 +50,7 @@ inner join RoundTypes rt on
 	r.roundTypeId = rt.id
 where
     eventId = %(event_id)s
+    and personId = '2015CAMP17'
 order by
 	start_date,
     competitionId,
@@ -157,8 +163,13 @@ def longest_streaks():
 
 def main():
     log.info("========== %s ==========" % title)
-    statistics = longest_streaks()
-    create_statistics(statistics)
+    start_process()
+    try:
+        statistics = longest_streaks()
+        create_statistics(statistics)
+        complete_process()
+    except Exception as e:
+        error_process(str(e))
 
 
 if __name__ == "__main__":

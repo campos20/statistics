@@ -5,12 +5,12 @@ import { StatisticsService } from './statistics.service';
 export class StatisticsController {
   constructor(private readonly appService: StatisticsService) {}
 
-  @Get('list')
+  @Get()
   list(term?: string) {
     return this.appService.list(term);
   }
 
-  @Get('list/:pathId')
+  @Get(':pathId')
   detail(@Param('pathId') pathId: string) {
     return this.appService.detail(pathId);
   }

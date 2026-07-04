@@ -12,7 +12,51 @@ queries:
       - Competition
     sqlQuery: |-
       with
-        ordered_wrs as (
+        current_single as (
+          select
+            *
+          from
+            results r
+            inner join events e on r.event_id = e.id
+            and e.`rank` < 900            
+          where
+            r.best > 0
+            and regional_single_record = 'WR'
+            and not exists (
+              select
+                1
+              from
+                results r2
+              where
+                r2.event_id = r.event_id
+                and r2.best < r.best
+                and r2.best > 0
+                and r2.regional_single_record = 'WR'
+            )
+        ),
+        current_average as (
+          select
+            *
+          from
+            results r
+            inner join events e on r.event_id = e.id
+            and e.`rank` < 900
+          where
+            r.average > 0
+            and regional_single_record = 'WR'
+            and not exists (
+              select
+                1
+              from
+                results r2
+              where
+                r2.event_id = r.event_id
+                and r2.average < r.average
+                and r2.average > 0
+                and r2.regional_single_record = 'WR'
+            )
+        ),
+        combined_wr as (
           select
             c.start_date,
             event_id,
@@ -21,18 +65,10 @@ queries:
             person_id,
             r.person_name,
             c.id competition_id,
-            c.name competition,
-            row_number() over (
-              partition by
-                event_id
-              order by
-                c.start_date desc
-            ) rn
+            c.name competition
           from
-            results r
+            current_single r
             inner join competitions c on r.competition_id = c.id
-          where
-            regional_single_record = 'WR'
           union all
           select
             c.start_date,
@@ -42,26 +78,10 @@ queries:
             person_id,
             r.person_name,
             c.id competition_id,
-            c.name competition,
-            row_number() over (
-              partition by
-                event_id
-              order by
-                c.start_date desc
-            ) rn
+            c.name competition
           from
-            results r
+            current_average r
             inner join competitions c on r.competition_id = c.id
-          where
-            regional_average_record = 'WR'
-        ),
-        current_wrs as (
-          select
-            *
-          from
-            ordered_wrs
-          where
-            rn = 1
         )
       select
         datediff (current_date, start_date) days,
@@ -71,13 +91,11 @@ queries:
         wca_statistics_person_link_format (person_id, person_name),
         wca_statistics_competition_link_format (competition_id, competition)
       from
-        current_wrs cw
-        inner join events e on e.id = cw.event_id
-      where
-        e.rank < 900
+        combined_wr cw
       order by
         1 desc,
-        e.rank
+        event_id,
+        record_type
       limit
         20
   - showPositions: true

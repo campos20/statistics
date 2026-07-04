@@ -224,81 +224,6 @@ queries:
       - Competition
     sqlQuery: |-
       with
-        ordered_records as (
-          select
-            c.start_date,
-            event_id,
-            'Single' record_type,
-            best record,
-            person_id,
-            r.person_name,
-            c.id competition_id,
-            c.name competition,
-            r.country_id region,
-            row_number() over (
-              partition by
-                event_id,
-                r.country_id
-              order by
-                c.start_date desc
-            ) rn
-          from
-            results r
-            inner join competitions c on r.competition_id = c.id
-          where
-            regional_single_record = 'NR'
-          union all
-          select
-            c.start_date,
-            event_id,
-            'Average' record_type,
-            best record,
-            person_id,
-            r.person_name,
-            c.id competition_id,
-            c.name competition,
-            r.country_id region,
-            row_number() over (
-              partition by
-                event_id,
-                r.country_id
-              order by
-                c.start_date desc
-            ) rn
-          from
-            results r
-            inner join competitions c on r.competition_id = c.id
-          where
-            regional_average_record = 'NR'
-        ),
-        current_records as (
-          select
-            *
-          from
-            ordered_records
-          where
-            rn = 1
-        )
-      select
-        datediff (current_date, start_date) days,
-        e.name,
-        wca_statistics_time_format (record, event_id, record_type) record,
-        record_type,
-        region,
-        wca_statistics_person_link_format (person_id, person_name),
-        wca_statistics_competition_link_format (competition_id, competition)
-      from
-        current_records c
-        inner join events e on e.id = c.event_id
-      where
-        e.rank < 900
-      order by
-        1 desc,
-        e.rank
-      limit
-        20
-    sqlQueryCustom: |-
-      with
         current_single as (
           select
             r.*,
@@ -390,6 +315,78 @@ queries:
         1 desc,
         event_id,
         record_type
+      limit
+        20
+    sqlQueryCustom: |-
+      with
+        ordered_results as (
+          select
+            c.start_date,
+            event_id,
+            'Single' record_type,
+            best record,
+            person_id,
+            r.person_name,
+            c.id competition_id,
+            c.name competition,
+            row_number() over (
+              partition by
+                event_id
+              order by
+                best
+            ) rn
+          from
+            results r
+            inner join competitions c on r.competition_id = c.id
+          where
+            best > 0
+            and person_id = ':WCA_ID'
+          union all
+          select
+            c.start_date,
+            event_id,
+            'Average' record_type,
+            best record,
+            person_id,
+            r.person_name,
+            c.id competition_id,
+            c.name competition,
+            row_number() over (
+              partition by
+                event_id
+              order by
+                average
+            ) rn
+          from
+            results r
+            inner join competitions c on r.competition_id = c.id
+          where
+            average > 0
+            and person_id = ':WCA_ID'
+        ),
+        current_records as (
+          select
+            *
+          from
+            ordered_results
+          where
+            rn = 1
+        )
+      select
+        datediff (current_date, start_date) days,
+        e.name,
+        wca_statistics_time_format (record, event_id, record_type) record,
+        record_type,
+        wca_statistics_person_link_format (person_id, person_name),
+        wca_statistics_competition_link_format (competition_id, competition)
+      from
+        current_records cr
+        inner join events e on e.id = cr.event_id
+      where
+        e.rank < 900
+      order by
+        1 desc,
+        e.rank
       limit
         20
 explanation: The first day of the competition is assumed here and thus the ages might be some days off.

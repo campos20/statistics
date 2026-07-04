@@ -17,8 +17,6 @@ queries:
             *
           from
             results r
-            inner join events e on r.event_id = e.id
-            and e.`rank` < 900            
           where
             r.best > 0
             and regional_single_record = 'WR'
@@ -39,11 +37,9 @@ queries:
             *
           from
             results r
-            inner join events e on r.event_id = e.id
-            and e.`rank` < 900
           where
             r.average > 0
-            and regional_single_record = 'WR'
+            and regional_average_record = 'WR'
             and not exists (
               select
                 1
@@ -53,7 +49,7 @@ queries:
                 r2.event_id = r.event_id
                 and r2.average < r.average
                 and r2.average > 0
-                and r2.regional_single_record = 'WR'
+                and r2.regional_average_record = 'WR'
             )
         ),
         combined_wr as (
@@ -74,7 +70,7 @@ queries:
             c.start_date,
             event_id,
             'Average' record_type,
-            best record,
+            average record,
             person_id,
             r.person_name,
             c.id competition_id,
@@ -92,6 +88,9 @@ queries:
         wca_statistics_competition_link_format (competition_id, competition)
       from
         combined_wr cw
+        inner join events e on cw.event_id = e.id
+      where
+        e.`rank` < 900
       order by
         1 desc,
         event_id,
